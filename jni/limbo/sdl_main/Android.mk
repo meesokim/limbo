@@ -21,7 +21,9 @@ LOCAL_CFLAGS := \
 SDLSRC := limbo-android-sdl.c $(TEST_SRC)
 
 # Add your application source files here...
-LOCAL_SRC_FILES := $(LOCAL_PATH)/$(SDLSRC)
+LOCAL_SRC_FILES := \
+	limbo-android-sdl.c
+#$(LOCAL_PATH)/$(SDLSRC)
 
 LOCAL_SHARED_LIBRARIES := png jpeg
 
