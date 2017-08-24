@@ -1,5 +1,7 @@
 #include $(call all-subdir-makefiles)
 
+APP_ALLOW_MISSING_DEPS := true
+
 include $(LIMBO_JNI_ROOT)/android-config.mak
 
 #If you want to build individual modules

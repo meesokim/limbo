@@ -4,8 +4,8 @@
 ############## Project Config Start
 
 # IMPORTANT: Speficy the root of the project
-LIMBO_JNI_ROOT := C:/users/dev/limbo/limbo-android/jni
-LIMBO_JNI_ROOT_INC := C:/users/dev/limbo/limbo-android/jni
+LIMBO_JNI_ROOT := ~/limbo/jni
+LIMBO_JNI_ROOT_INC := ~/limbo/jni
 
 # Enable KVM (NOT Tested)
 # Note: KVM headers are available only for android-21 platform and above
@@ -29,11 +29,11 @@ USE_SDL_AUDIO ?= true
 # Note 4: Building for Android x86_64 host requires ndk13 and android-21
 # Note 5: Building for Android ARM64 host requires ndk13 and android-21
  
-APP_PLATFORM = android-17
+APP_PLATFORM = android-21
 NDK_PLATFORM = platforms/$(APP_PLATFORM)
 
 # Set to true if you use platform-21 and above
-USE_NDK_PLATFORM21 ?= false
+USE_NDK_PLATFORM21 ?= true
 
 # Faster Builds with multiple threads
 BUILD_THREADS=6
@@ -47,9 +47,9 @@ BUILD_THREADS=6
 #NDK_ENV = windows
 
 # ndk 13 for 64bit
-NDK_ROOT = C:/tools/bin/android-ndk-r13-windows-x86_64/android-ndk-r13
-NDK_ROOT_INC = C:/tools/bin/android-ndk-r13-windows-x86_64/android-ndk-r13
-NDK_ENV = windows-x86_64
+NDK_ROOT = ~/android-ndk-r14b
+NDK_ROOT_INC = ~/android-ndk-r14b
+NDK_ENV = linux-x86_64
 
 # ndk 12
 #NDK_ROOT = C:/tools/bin/android-ndk-r12b-windows-x86/android-ndk-r12b
@@ -146,4 +146,5 @@ include $(LIMBO_JNI_ROOT)/android-device-config/android-ndkr8-x86.mak
 
 
 ################ No modifications below this line are necessary #####################
+
 include $(LIMBO_JNI_ROOT)/android-setup-toolchain.mak

@@ -1,0 +1,94 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+apply plugin: 'com.android.application'
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        //jcenter()
+	//mavenCentral()
+	jcenter {
+	   url "http://jcenter.bintray.com"
+	}
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+	compile 'com.android.support:appcompat-v7:26.0.1'
+    }
+}
+
+allprojects {
+    repositories {
+	jcenter()
+    }
+
+}
+
+def getNdkBuildPath() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    def command =  properties.getProperty('ndk.dir')
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        command += "\\ndk-build.cmd"
+    } else {
+        command += "/ndk-build"
+    }
+
+    return command
+}
+
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+   
+    defaultConfig {
+        applicationId "org.miso.limbo"
+        minSdkVersion 21
+        targetSdkVersion 21
+
+        ndk {
+            moduleName 'main'
+        }
+
+    }
+
+    lintOptions {
+	abortOnError false
+    }
+
+    sourceSets.main {
+	manifest.srcFile 'AndroidManifest.xml'
+	jniLibs.srcDir 'libs'
+	jni.srcDirs = ['jni']
+	java.srcDirs = ['src', 'apps/limbo-android-x86/src']
+	resources.srcDirs = ['src', 'apps/limbo-android-x86/src']
+	aidl.srcDirs = ['src']
+	renderscript.srcDirs = ['src']
+	res.srcDirs = ['res' ,'apps/limbo-android-x86/src']
+	assets.srcDirs = ['assets']
+    }
+    ext {
+        // 아직은 Task 내에서 Build Type을 구분할 방법이 없기 때문에 이 Property를
+        // 이용해 Native Library를 Debugging 가능하도록 Build할 지 결정합니다.
+        nativeDebuggable = true
+    }
+    task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
+	if (nativeDebuggable) {
+		commandLine getNdkBuildPath(), 'NDK_DEBUG=1', '-C', file('.').absolutePath	
+	} else {
+		commandLine getNdkBuildPath(), '-C', file('.').absolutePath
+	}
+    }
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn buildNative
+    }	
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}

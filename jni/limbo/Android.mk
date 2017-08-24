@@ -7,20 +7,19 @@ LOCAL_ARM_MODE:= $(APP_ARM_MODE)
 include $(LIMBO_JNI_ROOT)/android-config.mak
  
 LOCAL_SRC_FILES :=			\
-	vm-executor-jni.c
-
-#$(NDK_ROOT)/sources/android/cpufeatures/cpu-features.c
+#	$(ANDROID_NDK_ROOT)/sources/android/cpufeatures/cpu-features.c \
+	vm-executor-jni.c 
 
 LOCAL_MODULE := limbo
 
 LOCAL_C_INCLUDES :=			\
 	$(LOCAL_PATH)/.. \
-	$(LIMBO_JNI_ROOT_INC)/qemu \
-	$(LIMBO_JNI_ROOT_INC)/qemu/include \
-	$(LIMBO_JNI_ROOT_INC)/compat \
-	$(LIMBO_JNI_ROOT_INC)/glib/glib \
-	$(LIMBO_JNI_ROOT_INC)/glib \
-	$(LIMBO_JNI_ROOT_INC)/glib/android
+	$(LIMBO_JNI_ROOT)/qemu \
+	$(LIMBO_JNI_ROOT)/qemu/include \
+	$(LIMBO_JNI_ROOT)/compat \
+	jni/glib/glib \
+	jni/glib \
+	jni/glib/android \
 
 LOCAL_STATIC_LIBRARIES := spice png glib-2.0
 
@@ -28,8 +27,8 @@ LOCAL_LDLIBS :=				\
 	-ldl -llog 
 
 #LIMBO
-#LOCAL_CFLAGS += $(ARCH_CFLAGS)
-LOCAL_CFLAGS += -std=c++11 -U__STRICT_ANSI__
+LOCAL_CFLAGS += $(ARCH_CFLAGS)
+#LOCAL_CFLAGS += -std=c++11 -U__STRICT_ANSI__
 LOCAL_CFLAGS += -include $(FIXUTILS_MEM) -include $(LOGUTILS) 
 LOCAL_STATIC_LIBRARIES += liblimbocompat
 LOCAL_ARM_MODE := $(ARM_MODE)

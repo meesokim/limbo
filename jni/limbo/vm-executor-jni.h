@@ -23,7 +23,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "qemu/typedefs.h"
+#include "qemu/include/qemu/typedefs.h"
 
 typedef struct Error Error;
 

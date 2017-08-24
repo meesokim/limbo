@@ -53,7 +53,6 @@ https://github.com/limboemu/limbo
 	dos2unix qemu-2.9.0.patch
 	git apply qemu-2.9.0.patch
 	mv /cygdrive/c/temp/qemu-2.9.0/* /cygdrive/c/users/youraccount/.../limbo-android/jni/qemu/
-
     e. For linux/MacOSX make sure the configure script under .../qemu/configure is executable 
     chmod u+x qemu/configure 
     
@@ -82,7 +81,7 @@ https://github.com/limboemu/limbo
         
          
 	If you build on Windows platform make sure you update the android-config.mak file:
-    NDK_ROOT = C:/tools/bin/android-ndk-r13b-windows-x86_64/android-ndk-r13b
+    	NDK_ROOT = C:/tools/bin/android-ndk-r13b-windows-x86_64/android-ndk-r13b
 	NDK_ROOT_INC = C:/tools/bin/android-ndk-r13b-windows-x86_64/android-ndk-r13b
         
     If you want to build the x86, ARM,MIPS,PowerPC Emulator update android-qemu-config.mak file with one of these:

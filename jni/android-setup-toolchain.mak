@@ -39,7 +39,7 @@ USE_NDK11 = -D__NDK11_FUNC_MISSING__
 
 TOOLCHAIN_DIR = $(NDK_ROOT)/toolchains/$(EABI)/prebuilt/$(NDK_ENV)
 TOOLCHAIN_PREFIX := $(TOOLCHAIN_DIR)/bin/$(TOOLCHAIN_PREFIX)
-NDK_PROJECT_PATH := $(LIMBO_JNI_ROOT)/../
+NDK_PROJECT_PATH := $(LIMBO_JNI_ROOT)/..
 
 #NDK Toolchain
 CC = $(TOOLCHAIN_PREFIX)gcc
@@ -56,13 +56,13 @@ INCLUDE_FIXED = $(LIMBO_JNI_ROOT_INC)/include-fixed
 
 # The logutils header is injected into all compiled files in order to redirect
 # output to the Android console, and provide debugging macros.
-LOGUTILS = $(LIMBO_JNI_ROOT_INC)/compat/limbo_logutils.h
+LOGUTILS = $(LIMBO_JNI_ROOT)/compat/limbo_logutils.h
 
 #Some fixes for Android compatibility
-FIXUTILS_MEM = $(LIMBO_JNI_ROOT_INC)/compat/limbo_compat_memove.h
-COMPATUTILS_FD = $(LIMBO_JNI_ROOT_INC)/compat/limbo_compat_fd.h
-COMPATMACROS = $(LIMBO_JNI_ROOT_INC)/compat/limbo_compat_macros.h
-COMPATANDROID = $(LIMBO_JNI_ROOT_INC)/compat/limbo_compat.h
+FIXUTILS_MEM = $(LIMBO_JNI_ROOT)/compat/limbo_compat_memove.h
+COMPATUTILS_FD = $(LIMBO_JNI_ROOT)/compat/limbo_compat_fd.h
+COMPATMACROS = $(LIMBO_JNI_ROOT)/compat/limbo_compat_macros.h
+COMPATANDROID = $(LIMBO_JNI_ROOT)/compat/limbo_compat.h
 
 # These compatibility functions should be forcebly included from the static compat library
 INCLUDE_FUNCS = -u set_jni
@@ -95,8 +95,10 @@ ARCH_CFLAGS := $(ARCH_CFLAGS)
 # INCLUDE_FIXED
 SYSTEM_INCLUDE = \
     -I$(INCLUDE_FIXED) \
-    $(SYS_ROOT) \
-    -I$(LIMBO_JNI_ROOT_INC)/qemu/linux-headers \
+    -I$(SYS_ROOT) \
+    -I$(LIMBO_JNI_ROOT)/glib/glib \
+    -I$(LIMBO_JNI_ROOT)/glib \
+    -I$(LIMBO_JNI_ROOT)/qemu/linux-headers \
     -I$(TOOLCHAIN_DIR_INC)/$(EABI)/include \
     -I$(NDK_INCLUDE) \
     $(STL_INCLUDE) \

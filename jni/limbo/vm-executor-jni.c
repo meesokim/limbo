@@ -18,7 +18,7 @@
  */
 #include <jni.h>
 #include <stdio.h>
-#include "limbo_logutils.h"
+#include "compat/limbo_logutils.h"
 #include "vm-executor-jni.h"
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -31,8 +31,8 @@
 #include <unwind.h>
 #include <dlfcn.h>
 #include <glib.h>
-#include "limbo_compat.h"
-#include "limbo_compat_fd.h"
+#include "compat/limbo_compat.h"
+#include "compat/limbo_compat_fd.h"
 
 #define MSG_BUFSIZE 1024
 #define MAX_STRING_LEN 1024

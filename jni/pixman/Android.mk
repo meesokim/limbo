@@ -41,7 +41,7 @@ LOCAL_SRC_FILES := \
 	pixman-timer.c \
 	pixman-trap.c \
 	pixman-utils.c \
-	$(NDK_ROOT)/sources/android/cpufeatures/cpu-features.c
+	$(ANDROID_NDK_ROOT)/sources/android/cpufeatures/cpu-features.c
 
 ifeq ($(strip $(TARGET_ARCH)),arm)
 	# Will only be used if runtime detection reports NEON capabilities
