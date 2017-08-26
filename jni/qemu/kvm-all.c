@@ -1937,7 +1937,11 @@ static void kvm_eat_signals(CPUState *cpu)
     sigaddset(&waitset, SIG_IPI);
 
     do {
+#if defined(__ANDROID__)
+    	__rt_sigtimedwait(&waitset, &siginfo, &ts, sizeof(waitset));
+#else
         r = sigtimedwait(&waitset, &siginfo, &ts);
+#endif // __ANDROID__
         if (r == -1 && !(errno == EAGAIN || errno == EINTR)) {
             perror("sigtimedwait");
             exit(1);

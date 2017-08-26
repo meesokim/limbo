@@ -66,6 +66,7 @@ static struct SDLAudioState {
 } glob_sdl;
 typedef struct SDLAudioState SDLAudioState;
 
+#ifndef __LIMBO__
 static void GCC_FMT_ATTR (1, 2) sdl_logerr (const char *fmt, ...)
 {
     va_list ap;
@@ -76,7 +77,7 @@ static void GCC_FMT_ATTR (1, 2) sdl_logerr (const char *fmt, ...)
 
     AUD_log (AUDIO_CAP, "Reason: %s\n", SDL_GetError ());
 }
-
+#endif //__LIMBO__
 static int sdl_lock (SDLAudioState *s, const char *forfn)
 {
 #if USE_SEMAPHORE
@@ -206,6 +207,7 @@ static int sdl_open (SDL_AudioSpec *req, SDL_AudioSpec *obt)
 {
     int status;
 #ifndef _WIN32
+#ifndef __ANDROID__
     int err;
     sigset_t new, old;
 
@@ -221,6 +223,7 @@ static int sdl_open (SDL_AudioSpec *req, SDL_AudioSpec *obt)
         return -1;
     }
 #endif
+#endif // __ANDROID__
 
     status = SDL_OpenAudio (req, obt);
     if (status) {
@@ -228,6 +231,7 @@ static int sdl_open (SDL_AudioSpec *req, SDL_AudioSpec *obt)
     }
 
 #ifndef _WIN32
+#ifndef __ANDROID__
     err = pthread_sigmask (SIG_SETMASK, &old, NULL);
     if (err) {
         dolog ("sdl_open: pthread_sigmask (restore) failed: %s\n",
@@ -237,6 +241,7 @@ static int sdl_open (SDL_AudioSpec *req, SDL_AudioSpec *obt)
         exit (EXIT_FAILURE);
     }
 #endif
+#endif // __ANDROID__
     return status;
 }
 

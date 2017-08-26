@@ -382,7 +382,10 @@ strip="${STRIP-${cross_prefix}strip}"
 windres="${WINDRES-${cross_prefix}windres}"
 pkg_config_exe="${PKG_CONFIG-${cross_prefix}pkg-config}"
 query_pkg_config() {
-    "${pkg_config_exe}" ${QEMU_PKG_CONFIG_FLAGS} "$@"
+	#Limbo: No need for it
+    #"${pkg_config_exe}" ${QEMU_PKG_CONFIG_FLAGS} "$@"
+    echo ""
+    
 }
 pkg_config=query_pkg_config
 sdl_config="${SDL_CONFIG-${cross_prefix}sdl-config}"
@@ -721,7 +724,7 @@ else
   objcc="$cc"
 fi
 
-if test "$mingw32" = "yes" ; then
+if test "$mingw32" = "yes" || test "$mingw64" = "yes"; then
   EXESUF=".exe"
   DSOSUF=".dll"
   QEMU_CFLAGS="-DWIN32_LEAN_AND_MEAN -DWINVER=0x501 $QEMU_CFLAGS"
@@ -1831,7 +1834,9 @@ fi
 # pkg-config probe
 
 if ! has "$pkg_config_exe"; then
-  error_exit "pkg-config binary '$pkg_config_exe' not found"
+  #Limbo
+  echo "Limbo: Ignoring pkg-config detection"
+  #error_exit "pkg-config binary '$pkg_config_exe' not found"
 fi
 
 ##########################################
@@ -2601,9 +2606,11 @@ elif has ${sdl_config}; then
   sdlversion=$($sdlconfig --version)
 else
   if test "$sdl" = "yes" ; then
-    feature_not_found "sdl" "Install SDL devel"
+    #feature_not_found "sdl" "Install SDL devel"
+    echo "Limbo: SDL not found, Skipping"
   fi
-  sdl=no
+  #Limbo: Let us define SDL ourselves
+  #sdl=no
 fi
 if test -n "$cross_prefix" && test "$(basename "$sdlconfig")" = sdl-config; then
   echo warning: using "\"$sdlconfig\"" to detect cross-compiled sdl >&2
@@ -2638,14 +2645,17 @@ EOF
       if compile_prog "$sdl_cflags" "$sdl_libs" ; then
 	:
       else
-        sdl=no
+        #sdl=no
+        echo "Limbo: Will define SDL ourselves later"
       fi
     fi # static link
   else # sdl not found
     if test "$sdl" = "yes" ; then
-      feature_not_found "sdl" "Install SDL devel"
+      #feature_not_found "sdl" "Install SDL devel"
+      echo "Limbo: SDL not found, skipping"
     fi
-    sdl=no
+    #sdl=no
+    #Limbo: Let us define SDL ourselves
   fi # sdl compile test
 fi
 
@@ -3098,7 +3108,8 @@ for i in $glib_modules; do
         LIBS="$glib_libs $LIBS"
         libs_qga="$glib_libs $libs_qga"
     else
-        error_exit "glib-$glib_req_ver $i is required to compile QEMU"
+        #error_exit "glib-$glib_req_ver $i is required to compile QEMU"
+        echo "Limbo: glib-$glib_req_ver $i is required to compile QEMU, Skipping"
     fi
 done
 
@@ -4788,9 +4799,13 @@ if test "$gcov" = "yes" ; then
   CFLAGS="-fprofile-arcs -ftest-coverage -g $CFLAGS"
   LDFLAGS="-fprofile-arcs -ftest-coverage $LDFLAGS"
 elif test "$fortify_source" = "yes" ; then
-  CFLAGS="-O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 $CFLAGS"
+  #Limbo: Remove optimization
+  #CFLAGS="-O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 $CFLAGS"
+  CFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 $CFLAGS"
 elif test "$debug" = "no"; then
-  CFLAGS="-O2 $CFLAGS"
+  #Limbo: Remove optimization
+  #CFLAGS="-O2 $CFLAGS"
+  CFLAGS="$CFLAGS"
 fi
 
 ##########################################
@@ -5889,6 +5904,13 @@ if test "$linux" = "yes" ; then
     # For non-KVM architectures we will not have asm headers
     if [ -e "$source_path/linux-headers/asm-$linux_arch" ]; then
       symlink "$source_path/linux-headers/asm-$linux_arch" linux-headers/asm
+    	case "$OSTYPE" in
+			cygwin*) rm -rf "$source_path/linux-headers/asm" \
+				&& cygstart --action=runas cmd /c \
+				mklink /d "`cygpath -w \"$source_path/linux-headers/asm"`" "`cygpath \
+				-w \"$source_path/linux-headers/asm-$linux_arch"`" ;;		
+			*) symlink "$source_path/linux-headers/asm-$linux_arch" linux-headers/asm ;;
+		esac
     fi
 fi
 
@@ -6174,9 +6196,10 @@ for i in $ARCH $TARGET_BASE_ARCH ; do
   ;;
   arm)
     disas_config "ARM"
-    if test -n "${cxx}"; then
-      disas_config "ARM_A64"
-    fi
+    echo "Limbo: Disabling ${cxx} disas_config ARM_A64"
+#    if test -n "${cxx}"; then
+#      disas_config "ARM_A64"
+#    fi
   ;;
   cris)
     disas_config "CRIS"

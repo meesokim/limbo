@@ -37,7 +37,9 @@
 #else
 #ifdef __linux__
 #include <linux/ppdev.h>
+#if !defined ( __ANDROID__ ) | defined ( __ANDROID_HAS_PARPORT__ )
 #include <linux/parport.h>
+#endif //__ANDROID__
 #endif
 #endif
 
@@ -112,6 +114,11 @@ static int pp_ioctl(Chardev *chr, int cmd, void *arg)
             return -ENOTSUP;
         }
         break;
+//Limbo
+#if defined ( __ANDROID__ ) & !defined ( __ANDROID_HAS_IEEE__ )
+        printf("%s: Mode IEEE1284_MODE_EPP|IEEE1284_ADDR not supported\n", __func__);
+        return -EIO;
+#else
     case CHR_IOCTL_PP_EPP_READ_ADDR:
         if (pp_hw_mode(drv, IEEE1284_MODE_EPP | IEEE1284_ADDR)) {
             struct ParallelIOArg *parg = arg;
@@ -148,6 +155,7 @@ static int pp_ioctl(Chardev *chr, int cmd, void *arg)
             }
         }
         break;
+#endif // __ANDROID__
     default:
         return -ENOTSUP;
     }
@@ -168,7 +176,11 @@ static void qemu_chr_open_pp_fd(Chardev *chr,
     }
 
     drv->fd = fd;
+#if defined ( __ANDROID__ ) & !defined ( __ANDROID_HAS_IEEE__ )
+    printf("%s: Mode IEEE1284_MODE_COMPAT not supported\n", __func__);
+#else
     drv->mode = IEEE1284_MODE_COMPAT;
+#endif // __ANDROID__
 }
 #endif /* __linux__ */
 
@@ -288,7 +300,11 @@ static void char_parallel_finalize(Object *obj)
     ParallelChardev *drv = PARALLEL_CHARDEV(chr);
     int fd = drv->fd;
 
+#if defined ( __ANDROID__ ) & !defined ( __ANDROID_HAS_IEEE__ )
+    printf("%s: Mode IEEE1284_MODE_COMPAT not supported\n", __func__);
+#else
     pp_hw_mode(drv, IEEE1284_MODE_COMPAT);
+#endif // __ANDROID__
     ioctl(fd, PPRELEASE);
     close(fd);
     qemu_chr_be_event(chr, CHR_EVENT_CLOSED);

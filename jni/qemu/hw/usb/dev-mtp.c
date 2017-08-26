@@ -14,7 +14,9 @@
 #include <wchar.h>
 #include <dirent.h>
 
+#if !defined ( __ANDROID__ ) | defined ( __ANDROID_HAS_STATVFS__ )
 #include <sys/statvfs.h>
+#endif // __ANDROID__
 #ifdef CONFIG_INOTIFY1
 #include <sys/inotify.h>
 #include "qemu/main-loop.h"
@@ -847,7 +849,9 @@ static MTPData *usb_mtp_get_storage_ids(MTPState *s, MTPControl *c)
 static MTPData *usb_mtp_get_storage_info(MTPState *s, MTPControl *c)
 {
     MTPData *d = usb_mtp_data_alloc(c);
+#if !defined ( __ANDROID__ ) | defined ( __ANDROID_HAS_STATVFS__ )
     struct statvfs buf;
+
     int rc;
 
     trace_usb_mtp_op_get_storage_info(s->dev.addr);
@@ -875,6 +879,7 @@ static MTPData *usb_mtp_get_storage_info(MTPState *s, MTPControl *c)
 
     usb_mtp_add_str(d, s->desc);
     usb_mtp_add_wstr(d, L"123456789abcdef");
+#endif //__ANDROID__
     return d;
 }
 

@@ -2,6 +2,7 @@
 #include "qemu-common.h"
 #include "qemu/error-report.h"
 
+#if !defined (__LIMBO__)
 void error_vprintf(const char *fmt, va_list ap)
 {
     if (g_test_initialized() && !g_test_subprocess()) {
@@ -17,3 +18,5 @@ void error_vprintf_unless_qmp(const char *fmt, va_list ap)
 {
     error_vprintf(fmt, ap);
 }
+#endif //__LIMBO__
+

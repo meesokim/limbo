@@ -23,7 +23,7 @@ package android.androidVNC;
 
 import java.util.ArrayList;
 
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 
 import android.app.Activity;
 import android.app.ActivityManager.MemoryInfo;

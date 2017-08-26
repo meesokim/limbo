@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 import com.max2idea.android.limbo.main.Config;
 import com.max2idea.android.limbo.main.LimboActivity;
 import com.max2idea.android.limbo.main.LimboFileManager;

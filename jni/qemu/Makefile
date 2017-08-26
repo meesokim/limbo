@@ -203,7 +203,8 @@ $(call set-vpath, $(SRC_PATH))
 
 LIBS+=-lz $(LIBS_TOOLS)
 
-HELPERS-$(CONFIG_LINUX) = qemu-bridge-helper$(EXESUF)
+#Limbo: No bridge helpers
+#HELPERS-$(CONFIG_LINUX) = qemu-bridge-helper$(EXESUF)
 
 ifdef BUILD_DOCS
 DOCS=qemu-doc.html qemu-doc.txt qemu.1 qemu-img.1 qemu-nbd.8 qemu-ga.8
@@ -281,7 +282,8 @@ dummy := $(call unnest-vars,, \
                 trace-obj-y)
 
 ifneq ($(wildcard config-host.mak),)
-include $(SRC_PATH)/tests/Makefile.include
+#Limbo: disable tests
+#include $(SRC_PATH)/tests/Makefile.include
 endif
 
 all: $(DOCS) $(TOOLS) $(HELPERS-y) recurse-all modules
@@ -372,13 +374,14 @@ libqemuutil.a: $(util-obj-y)
 
 COMMON_LDADDS = $(trace-obj-y) libqemuutil.a libqemustub.a
 
-qemu-img.o: qemu-img-cmds.h
+#qemu-img.o: qemu-img-cmds.h
 
-qemu-img$(EXESUF): qemu-img.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
-qemu-nbd$(EXESUF): qemu-nbd.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
-qemu-io$(EXESUF): qemu-io.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
+#qemu-img$(EXESUF): qemu-img.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
+#qemu-nbd$(EXESUF): qemu-nbd.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
+#qemu-io$(EXESUF): qemu-io.o $(block-obj-y) $(crypto-obj-y) $(io-obj-y) $(qom-obj-y) $(COMMON_LDADDS)
 
-qemu-bridge-helper$(EXESUF): qemu-bridge-helper.o $(COMMON_LDADDS)
+#Limbo: No bridge helpers
+#qemu-bridge-helper$(EXESUF): qemu-bridge-helper.o $(COMMON_LDADDS)
 
 fsdev/virtfs-proxy-helper$(EXESUF): fsdev/virtfs-proxy-helper.o fsdev/9p-marshal.o fsdev/9p-iov-marshal.o $(COMMON_LDADDS)
 fsdev/virtfs-proxy-helper$(EXESUF): LIBS += -lcap
@@ -802,7 +805,8 @@ endif
 # Dependencies in Makefile.objs files come from our recursive subdir rules
 -include $(wildcard *.d tests/*.d)
 
-include $(SRC_PATH)/tests/docker/Makefile.include
+#Limbo: disable tests
+#include $(SRC_PATH)/tests/docker/Makefile.include
 
 .PHONY: help
 help:

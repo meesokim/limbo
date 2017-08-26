@@ -20,7 +20,8 @@
 
 /* GLIB version compatibility flags */
 #if !GLIB_CHECK_VERSION(2, 26, 0)
-#define G_TIME_SPAN_SECOND              (G_GINT64_CONSTANT(1000000))
+//Limbo: already defined
+//#define G_TIME_SPAN_SECOND              (G_GINT64_CONSTANT(1000000))
 #endif
 
 #if !GLIB_CHECK_VERSION(2, 28, 0)
@@ -55,10 +56,11 @@ gint g_poll_fixed(GPollFD *fds, guint nfds, gint timeout);
 static inline gchar *qemu_g_dir_make_tmp(gchar const *tmpl, GError **error)
 {
     gchar *path = g_build_filename(g_get_tmp_dir(), tmpl ?: ".XXXXXX", NULL);
-
+#ifndef __ANDROID__
     if (mkdtemp(path) != NULL) {
         return path;
     }
+#endif //__ANDROID__
     /* Error occurred, clean up. */
     g_set_error(error, G_FILE_ERROR, g_file_error_from_errno(errno),
                 "mkdtemp() failed");
@@ -304,16 +306,17 @@ static inline void g_slist_free_full(GSList *list, GDestroyNotify free_func)
 }
 #endif
 
-#if !GLIB_CHECK_VERSION(2, 26, 0)
-static inline void g_source_set_name(GSource *source, const char *name)
-{
-    /* This is just a debugging aid, so leaving it a no-op */
-}
-static inline void g_source_set_name_by_id(guint tag, const char *name)
-{
-    /* This is just a debugging aid, so leaving it a no-op */
-}
-#endif
+//Limbo: already defined in our glib
+//#if !GLIB_CHECK_VERSION(2, 26, 0)
+//static inline void g_source_set_name(GSource *source, const char *name)
+//{
+//    /* This is just a debugging aid, so leaving it a no-op */
+//}
+//static inline void g_source_set_name_by_id(guint tag, const char *name)
+//{
+//    /* This is just a debugging aid, so leaving it a no-op */
+//}
+//#endif
 
 #if !GLIB_CHECK_VERSION(2, 36, 0)
 /* Always fail.  This will not include error_report output in the test log,
@@ -322,9 +325,10 @@ static inline void g_source_set_name_by_id(guint tag, const char *name)
 #define g_test_initialized() (0)
 #endif
 #if !GLIB_CHECK_VERSION(2, 38, 0)
-#ifdef CONFIG_HAS_GLIB_SUBPROCESS_TESTS
-#error schizophrenic detection of glib subprocess testing
-#endif
+//Limbo: don't need this
+//#ifdef CONFIG_HAS_GLIB_SUBPROCESS_TESTS
+//#error schizophrenic detection of glib subprocess testing
+//#endif
 #define g_test_subprocess() (0)
 #endif
 
@@ -336,15 +340,16 @@ g_test_add_data_func_full(const char *path,
                           gpointer fn,
                           gpointer data_free_func)
 {
-#if GLIB_CHECK_VERSION(2, 26, 0)
+	//Limbo: don't need this check for newer glib
+//#if GLIB_CHECK_VERSION(2, 26, 0)
     /* back-compat casts, remove this once we can require new-enough glib */
     g_test_add_vtable(path, 0, data, NULL,
                       (GTestFixtureFunc)fn, (GTestFixtureFunc) data_free_func);
-#else
-    /* back-compat casts, remove this once we can require new-enough glib */
-    g_test_add_vtable(path, 0, data, NULL,
-                      (void (*)(void)) fn, (void (*)(void)) data_free_func);
-#endif
+//#else
+//    /* back-compat casts, remove this once we can require new-enough glib */
+//    g_test_add_vtable(path, 0, data, NULL,
+//                      (void (*)(void)) fn, (void (*)(void)) data_free_func);
+//#endif
 }
 #endif
 

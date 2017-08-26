@@ -13,7 +13,7 @@ import org.libsdl.app.ClearRenderer;
 import org.libsdl.app.SDLActivity;
 import org.libsdl.app.SDLSurface;
 
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 import com.max2idea.android.limbo.utils.DrivesDialogBox;
 import com.max2idea.android.limbo.utils.Machine;
 import com.max2idea.android.limbo.utils.QmpClient;

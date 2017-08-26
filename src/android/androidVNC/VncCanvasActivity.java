@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.antlersoft.android.bc.BCFactory;
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 import com.max2idea.android.limbo.main.LimboActivity;
 
 import android.app.Activity;

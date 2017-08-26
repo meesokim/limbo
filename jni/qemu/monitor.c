@@ -352,6 +352,10 @@ void monitor_vprintf(Monitor *mon, const char *fmt, va_list ap)
 {
     char *buf;
 
+#ifdef __ANDROID__
+    //__android_log_vprint(ANDROID_LOG_VERBOSE, "monitor", fmt, ap);
+#endif
+
     if (!mon)
         return;
 
@@ -1858,6 +1862,13 @@ static void hmp_loadvm(Monitor *mon, const QDict *qdict)
 int monitor_get_fd(Monitor *mon, const char *fdname, Error **errp)
 {
     mon_fd_t *monfd;
+
+#ifdef __LIMBO__
+    //LIMBO: We treat the fdname send by VNC as an actual fd
+    int fd_tmp = atoi(fdname);
+    if(fd_tmp  > 0)
+    	return fd_tmp;
+#endif //__LIMBO__
 
     QLIST_FOREACH(monfd, &mon->fds, next) {
         int fd;
@@ -3942,6 +3953,7 @@ static void monitor_readline_flush(void *opaque)
  * TODO should return int, so callers can calculate width, but that
  * requires surgery to monitor_vprintf().  Left for another day.
  */
+#ifndef __ANDROID__
 void error_vprintf(const char *fmt, va_list ap)
 {
     if (cur_mon && !monitor_cur_is_qmp()) {
@@ -3959,6 +3971,7 @@ void error_vprintf_unless_qmp(const char *fmt, va_list ap)
         vfprintf(stderr, fmt, ap);
     }
 }
+#endif //__ANDROID__
 
 static void __attribute__((constructor)) monitor_lock_init(void)
 {

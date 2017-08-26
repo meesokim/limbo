@@ -118,7 +118,7 @@ NDK_ENV = windows-x86_64
 
 ######### x86
 # x86 Phones (ie Zenfone)
-include $(LIMBO_JNI_ROOT)/android-device-config/android-ndkr8-x86.mak
+#include $(LIMBO_JNI_ROOT)/android-device-config/android-ndkr8-x86.mak
 
 # x86 Phones Debug No optimization (ie Zenfone)
 #include $(LIMBO_JNI_ROOT)/android-device-config/android-ndkr8-x86-noopt.mak
@@ -140,7 +140,7 @@ include $(LIMBO_JNI_ROOT)/android-device-config/android-ndkr8-x86.mak
 ######### Armv8 64 bit (glib fails to compile, glibconfig.h needs update)
 
 # ARMv8 64 bit - Generic soft float
-#include $(LIMBO_JNI_ROOT)/android-device-config/android-generic-armv8-vfpv3d16.mak
+include $(LIMBO_JNI_ROOT)/android-device-config/android-generic-armv8-vfpv3d16.mak
 
 # ARMv8 64 bit - Generic soft float No optimazation
 #include $(LIMBO_JNI_ROOT)/android-device-config/android-generic-armv8-vfpv3d16-noopt.mak

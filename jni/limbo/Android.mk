@@ -7,8 +7,8 @@ LOCAL_ARM_MODE:= $(APP_ARM_MODE)
 include $(LIMBO_JNI_ROOT)/android-config.mak
  
 LOCAL_SRC_FILES :=			\
+	vm-executor-jni.c \
 #	$(ANDROID_NDK_ROOT)/sources/android/cpufeatures/cpu-features.c \
-	vm-executor-jni.c 
 
 LOCAL_MODULE := limbo
 

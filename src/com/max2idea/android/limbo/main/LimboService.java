@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 import com.max2idea.android.limbo.jni.VMExecutor;
 import com.max2idea.android.limbo.utils.UIUtils;
 

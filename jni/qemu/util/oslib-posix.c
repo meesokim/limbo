@@ -36,9 +36,11 @@
 #include "qapi/error.h"
 #include "qemu/sockets.h"
 #include <libgen.h>
+#if !defined(__ANDROID__) | defined(__ANDROID_HAS_SIGNAL__)
+//LIMBO: This is not needed for ANDROID 21 NDK and above
 #include <sys/signal.h>
+#endif //__ANDROID__
 #include "qemu/cutils.h"
-
 #ifdef CONFIG_LINUX
 #include <sys/syscall.h>
 #endif
@@ -72,7 +74,9 @@ static bool memset_thread_failed;
 
 int qemu_get_thread_id(void)
 {
-#if defined(__linux__)
+//Limbo: Not impl
+//#if defined(__linux__)
+#if defined(__linux__) & ( !defined(__ANDROID__) | defined(__ANDROID_HAS_SYS_GETTID__) )
     return syscall(SYS_gettid);
 #else
     return getpid();

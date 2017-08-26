@@ -14,6 +14,7 @@
 #include "monitor/monitor.h"
 #include "qemu/error-report.h"
 
+#if !defined (__LIMBO__)
 void error_printf(const char *fmt, ...)
 {
     va_list ap;
@@ -31,6 +32,8 @@ void error_printf_unless_qmp(const char *fmt, ...)
     error_vprintf_unless_qmp(fmt, ap);
     va_end(ap);
 }
+#endif //__ANDROID__
+
 
 static Location std_loc = {
     .kind = LOC_NONE
@@ -146,6 +149,7 @@ const char *error_get_progname(void)
 /*
  * Print current location to current monitor if we have one, else to stderr.
  */
+#ifndef __ANDROID__
 static void error_print_loc(void)
 {
     const char *sep = "";
@@ -176,6 +180,7 @@ static void error_print_loc(void)
         error_printf("%s", sep);
     }
 }
+#endif // __ANDROID__
 
 bool enable_timestamp_msg;
 /*
@@ -185,6 +190,7 @@ bool enable_timestamp_msg;
  * Prepend the current location and append a newline.
  * It's wrong to call this in a QMP monitor.  Use error_setg() there.
  */
+#ifndef __ANDROID__
 void error_vreport(const char *fmt, va_list ap)
 {
     GTimeVal tv;
@@ -201,6 +207,7 @@ void error_vreport(const char *fmt, va_list ap)
     error_vprintf(fmt, ap);
     error_printf("\n");
 }
+#endif //__ANDROID__
 
 /*
  * Print an error message to current monitor if we have one, else to stderr.
@@ -209,6 +216,7 @@ void error_vreport(const char *fmt, va_list ap)
  * Prepend the current location and append a newline.
  * It's wrong to call this in a QMP monitor.  Use error_setg() there.
  */
+#ifndef __ANDROID__
 void error_report(const char *fmt, ...)
 {
     va_list ap;
@@ -217,3 +225,4 @@ void error_report(const char *fmt, ...)
     error_vreport(fmt, ap);
     va_end(ap);
 }
+#endif //__ANDROID__

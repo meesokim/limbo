@@ -90,10 +90,17 @@ void sdl2_window_create(struct sdl2_console *scon)
                                          surface_width(scon->surface),
                                          surface_height(scon->surface),
                                          flags);
+#if defined(__LIMBO_SDL_FORCE_SOFTWARE_RENDERING__)
+    //LIMBO: Need to force SOFTWARE rendering because some devices don't like it
+    scon->real_renderer = SDL_CreateRenderer(scon->real_window, -1, SDL_RENDERER_SOFTWARE);
+#elif defined(__LIMBO_SDL_FORCE_HARDWARE_RENDERING__)
+    scon->real_renderer = SDL_CreateRenderer(scon->real_window, -1, SDL_RENDERER_ACCELERATED);
+#else
     scon->real_renderer = SDL_CreateRenderer(scon->real_window, -1, 0);
     if (scon->opengl) {
         scon->winctx = SDL_GL_GetCurrentContext();
     }
+#endif //__LIMBO_SDL_FORCE_SOFTWARE_RENDERING__
     sdl_update_caption(scon);
 }
 
@@ -769,6 +776,7 @@ void sdl_display_init(DisplayState *ds, int full_screen, int no_frame)
     }
 
 #ifdef __linux__
+#ifndef __ANDROID__
     /* on Linux, SDL may use fbcon|directfb|svgalib when run without
      * accessible $DISPLAY to open X11 window.  This is often the case
      * when qemu is run using sudo.  But in this case, and when actually
@@ -779,6 +787,7 @@ void sdl_display_init(DisplayState *ds, int full_screen, int no_frame)
      * Maybe it's a good idea to fix this in SDL instead.
      */
     setenv("SDL_VIDEODRIVER", "x11", 0);
+#endif // __ANDROID__
 #endif
 
     flags = SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE;

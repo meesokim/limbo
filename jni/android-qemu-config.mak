@@ -5,8 +5,8 @@ include android-config.mak
 ####### x86 and ARM devices support
 #ARM is currently very slow
 #Possible Values=
-#QEMU_TARGET_LIST = aarch64-softmmu
 
+#QEMU_TARGET_LIST = aarch64-softmmu
 #QEMU_TARGET_LIST = ppc64-softmmu
 #QEMU_TARGET_LIST = ppcemb-softmmu
 #QEMU_TARGET_LIST = s390x-softmmu
@@ -29,10 +29,10 @@ include android-config.mak
 
 #QEMU_TARGET_LIST = ppc-softmmu
 #QEMU_TARGET_LIST = x86_64-softmmu
-QEMU_TARGET_LIST = arm-softmmu
+#QEMU_TARGET_LIST = arm-softmmu
 #QEMU_TARGET_LIST = sparc-softmmu
 
-#QEMU_TARGET_LIST = ppc-softmmu,x86_64-softmmu,arm-softmmu,sparc-softmmu
+QEMU_TARGET_LIST = i386-softmmu,ppc-softmmu,x86_64-softmmu,arm-softmmu,sparc-softmmu
 
 #use coroutine
 #ucontext is deprecated and also not avail in Bionic
@@ -185,7 +185,7 @@ SPICE = --disable-spice
 
 WARNING_FLAGS = -Wno-redundant-decls -Wno-unused-variable \
 	-Wno-maybe-uninitialized -Wno-unused-function \
-	-Wunused-but-set-variable
+	-Wunused-but-set-variable -Wno-error=undef
 	
 ifeq ($(APP_ABI), armeabi)
     QEMU_HOST_CPU = arm
@@ -207,8 +207,10 @@ config:
 	echo NDK PLATFORM: $(NDK_PLATFORM) 
 	echo USR INCLUDE: $(NDK_INCLUDE)
 
-	cd ./qemu	; \
-	./configure \
+	cd ./qemu; \
+	cp $(NDK_ROOT)/$(NDK_PLATFORM)/arch-arm64/usr/lib/crtbegin_dynamic.o .; \
+	cp $(NDK_ROOT)/$(NDK_PLATFORM)/arch-arm64/usr/lib/crtend_android.o .; \
+	export LD_LIBRARY_PATH=$(NDK_ROOT)/$(NDK_PLATFORM)/arch-arm64/usr/lib;./configure \
 	--target-list=$(QEMU_TARGET_LIST) \
 	--cpu=$(QEMU_HOST_CPU) \
 	$(PIXMAN) \
@@ -253,6 +255,7 @@ config:
 	-I$(LIMBO_JNI_ROOT_INC)/compat  \
 	-I$(LIMBO_JNI_ROOT_INC)/spice-protocol  \
 	-I$(LIMBO_JNI_ROOT_INC)/spice/server  \
+	-L$(NDK_ROOT)/$(NDK_PLATFORM)/arch-arm64/usr/lib  \
 	$(FDT_INC) \
 	$(INCLUDE_ENC) \
 	$(LIMBO_DISABLE_TSC) \

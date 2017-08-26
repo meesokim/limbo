@@ -1066,6 +1066,10 @@ static bool should_send_vmdesc(void)
     return !machine->suppress_vmdesc && !in_postcopy;
 }
 
+#ifdef __LIMBO__
+extern int migration_status;
+#endif //__LIMBO__
+
 /*
  * Calls the save_live_complete_postcopy methods
  * causing the last few pages to be sent immediately and doing any associated
@@ -1103,6 +1107,11 @@ void qemu_savevm_state_complete_postcopy(QEMUFile *f)
 
     qemu_put_byte(f, QEMU_VM_EOF);
     qemu_fflush(f);
+
+#ifdef __LIMBO__
+    LOGI("Migration complete");
+	migration_status = 2;
+#endif
 }
 
 void qemu_savevm_state_complete_precopy(QEMUFile *f, bool iterable_only)
@@ -1191,6 +1200,11 @@ void qemu_savevm_state_complete_precopy(QEMUFile *f, bool iterable_only)
     qjson_destroy(vmdesc);
 
     qemu_fflush(f);
+
+#ifdef __LIMBO__
+    LOGI("Migration complete");
+    migration_status = 2;
+#endif
 }
 
 /* Give an estimate of the amount left to be transferred,
@@ -2071,6 +2085,21 @@ int qemu_loadvm_state(QEMUFile *f)
     return ret;
 }
 
+#ifdef __LIMBO__
+//LIMBO: Snapshots are deprecated
+int saving_state = 0;
+
+int get_save_state(){
+	return saving_state;
+}
+#endif // __LIMBO__
+
+#ifdef __LIMBO__
+//FIXME: this function currently is running via a JNI thread and cannot resume the vm right after
+void limbo_savevm(char * limbo_snapshot_name){
+	save_vmstate(NULL, limbo_snapshot_name);
+}
+#endif //__LIMBO__
 int save_vmstate(Monitor *mon, const char *name)
 {
     BlockDriverState *bs, *bs1;
@@ -2083,6 +2112,10 @@ int save_vmstate(Monitor *mon, const char *name)
     struct tm tm;
     Error *local_err = NULL;
     AioContext *aio_context;
+
+#ifdef __LIMBO__
+    	saving_state = 1;
+#endif
 
     if (!bdrv_all_can_snapshot(&bs)) {
         monitor_printf(mon, "Device '%s' is writable but does not "
@@ -2169,6 +2202,11 @@ int save_vmstate(Monitor *mon, const char *name)
     if (saved_vm_running) {
         vm_start();
     }
+
+#ifdef __LIMBO__
+    saving_state = 0;
+#endif //__LIMBO__
+
     return ret;
 }
 

@@ -1028,7 +1028,8 @@ void *qemu_get_virtqueue_element(VirtIODevice *vdev, QEMUFile *f, size_t sz)
      * When we do, we might be able to re-enable NDEBUG below.
      */
 #ifdef NDEBUG
-#error building with NDEBUG is not supported
+//Limbo: no fail
+//#error building with NDEBUG is not supported
 #endif
     assert(ARRAY_SIZE(data.in_addr) >= data.in_num);
     assert(ARRAY_SIZE(data.out_addr) >= data.out_num);

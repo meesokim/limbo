@@ -12,7 +12,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
-	compile 'com.android.support:appcompat-v7:26.0.1'
     }
 }
 
@@ -29,7 +28,7 @@ def getNdkBuildPath() {
 
     def command =  properties.getProperty('ndk.dir')
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        command += "\\ndk-build.cmd"
+        command += "/ndk-build.cmd"
     } else {
         command += "/ndk-build"
     }
@@ -39,12 +38,11 @@ def getNdkBuildPath() {
 
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
    
     defaultConfig {
-        applicationId "org.miso.limbo"
+        applicationId "com.limbo.emu.main.arm"
         minSdkVersion 21
         targetSdkVersion 21
 
@@ -55,35 +53,23 @@ android {
     }
 
     lintOptions {
-	abortOnError false
+		abortOnError false
     }
 
     sourceSets.main {
-	manifest.srcFile 'AndroidManifest.xml'
-	jniLibs.srcDir 'libs'
-	jni.srcDirs = ['jni']
-	java.srcDirs = ['src', 'apps/limbo-android-x86/src']
-	resources.srcDirs = ['src', 'apps/limbo-android-x86/src']
-	aidl.srcDirs = ['src']
-	renderscript.srcDirs = ['src']
-	res.srcDirs = ['res' ,'apps/limbo-android-x86/src']
-	assets.srcDirs = ['assets']
+		manifest.srcFile 'apps/limbo-android-arm/AndroidManifest.xml'
+		jniLibs.srcDirs =['obj/local']
+		java.srcDirs = ['src', 'apps/limbo-android-arm/src']
+		resources.srcDirs = ['src', 'apps/limbo-android-arm/src']
+		aidl.srcDirs = ['src']
+		renderscript.srcDirs = ['src']
+		res.srcDirs = ['res']
+		assets.srcDirs = ['assets']
     }
-    ext {
-        // 아직은 Task 내에서 Build Type을 구분할 방법이 없기 때문에 이 Property를
-        // 이용해 Native Library를 Debugging 가능하도록 Build할 지 결정합니다.
-        nativeDebuggable = true
-    }
-    task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
-	if (nativeDebuggable) {
-		commandLine getNdkBuildPath(), 'NDK_DEBUG=1', '-C', file('.').absolutePath	
-	} else {
-		commandLine getNdkBuildPath(), '-C', file('.').absolutePath
+	dependencies {
+		compile 'com.android.support:appcompat-v7:25.2.0'
+		provided 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 	}
-    }
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn buildNative
-    }	
 
     buildTypes {
         release {

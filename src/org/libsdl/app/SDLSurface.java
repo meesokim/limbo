@@ -186,10 +186,6 @@ public class SDLSurface extends GLSurfaceView
 			break;
 		}
 
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			Log.v("Limbo", "Surface Hardware Acceleration: " + this.isHardwareAccelerated());
-		}
-
 		mWidth = width;
 		mHeight = height;
 		SDLActivity.onNativeResize(width, height, sdlFormat, mDisplay.getRefreshRate());

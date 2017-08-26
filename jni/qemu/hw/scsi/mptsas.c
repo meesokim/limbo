@@ -1239,7 +1239,8 @@ static void *mptsas_load_request(QEMUFile *f, SCSIRequest *sreq)
      * When we do, we might be able to re-enable NDEBUG below.
      */
 #ifdef NDEBUG
-#error building with NDEBUG is not supported
+//Limbo:
+//#error building with NDEBUG is not supported
 #endif
     assert(n >= 0);
 

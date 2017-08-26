@@ -66,9 +66,19 @@ expand-objs = $(strip $(sort $(filter %.o,$1)) \
                   $(filter-out %.o %.mo,$1))
 
 %.o: %.c
-	$(call quiet-command,$(CC) $(QEMU_LOCAL_INCLUDES) $(QEMU_INCLUDES) \
+#Limbo: replace with windows path for NDK
+#	$(call quiet-command,$(CC) $(QEMU_LOCAL_INCLUDES) $(QEMU_INCLUDES) \
 	       $(QEMU_CFLAGS) $(QEMU_DGFLAGS) $(CFLAGS) $($@-cflags) \
 	       -c -o $@ $<,"CC","$(TARGET_DIR)$@")
+	$(call quiet-command,$(CC) \
+		$(subst /cygdrive/c,c:,$(QEMU_LOCAL_INCLUDES)) \
+		$(subst /cygdrive/c,c:,$(QEMU_INCLUDES)) \
+	    $(subst /cygdrive/c,c:,$(QEMU_CFLAGS)) \
+	    $(subst /cygdrive/c,c:,$(QEMU_DGFLAGS)) \
+	    $(subst /cygdrive/c,c:,$(CFLAGS)) \
+	    $(subst /cygdrive/c,c:,$($@-cflags)) \
+	       -c -o $@ $(subst /cygdrive/c,c:,$<),"CC","$(TARGET_DIR)$@")	       
+	       
 %.o: %.rc
 	$(call quiet-command,$(WINDRES) -I. -o $@ $<,"RC","$(TARGET_DIR)$@")
 
@@ -86,9 +96,19 @@ LINK = $(call quiet-command, $(LINKPROG) $(QEMU_CFLAGS) $(CFLAGS) $(LDFLAGS) -o 
 	       -c -o $@ $<,"CCAS","$(TARGET_DIR)$@")
 
 %.o: %.cc
-	$(call quiet-command,$(CXX) $(QEMU_LOCAL_INCLUDES) $(QEMU_INCLUDES) \
+#Limbo: replace with windows path for NDK
+#	$(call quiet-command,$(CXX) $(QEMU_LOCAL_INCLUDES) $(QEMU_INCLUDES) \
 	       $(QEMU_CXXFLAGS) $(QEMU_DGFLAGS) $(CFLAGS) $($@-cflags) \
 	       -c -o $@ $<,"CXX","$(TARGET_DIR)$@")
+	$(call quiet-command,$(CXX) \
+		$(subst /cygdrive/c,c:,$(QEMU_LOCAL_INCLUDES)) \
+		$(subst /cygdrive/c,c:,$(QEMU_INCLUDES)) \
+	       $(subst /cygdrive/c,c:,$(QEMU_CXXFLAGS)) \
+	       $(subst /cygdrive/c,c:,$(QEMU_DGFLAGS)) \
+	       $(subst /cygdrive/c,c:,$(CFLAGS)) \
+	       -fpermissive \
+	       $(subst /cygdrive/c,c:,$($@-cflags)) \
+	       -c -o $@ $(subst /cygdrive/c,c:,$<),"CXX","$(TARGET_DIR)$@")
 
 %.o: %.cpp
 	$(call quiet-command,$(CXX) $(QEMU_LOCAL_INCLUDES) $(QEMU_INCLUDES) \

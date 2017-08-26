@@ -41,7 +41,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.limbo.emu.lib.R;
+import com.limbo.emu.main.arm.R;
 import com.max2idea.android.limbo.jni.VMExecutor;
 import com.max2idea.android.limbo.main.Config.DebugMode;
 import com.max2idea.android.limbo.utils.FavOpenHelper;
